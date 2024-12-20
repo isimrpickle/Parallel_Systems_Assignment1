@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include "my_rand.h"
-
+# include <omp.h>
 /* Εάν ένας οργανισμός (κατειλημμένη θέση) έχει λιγότερους από 2 γειτονικούς οργανισμούς, ο οργανισμός
 πεθαίνει από μοναξιά.
  Εάν ένας οργανισμός έχει 2 ή 3 γειτονικούς οργανισμούς, ο οργανισμός επιζεί στην επόμενη γενιά.
@@ -29,7 +29,7 @@ void updating_grid(int*** grid,int***temp_grid){
                     }
                 }
 
-                //Insert the rules here!
+                //applying the rules!
                 if(curr_state==1){ //if it's initially alive then:
                     if(counter_if_Is<2 || counter_if_Is>3)
                         (*temp_grid)[row][collumn] = 0; //assigning it as dead (loneliness)
@@ -92,11 +92,17 @@ int main(int argc,char**argv){
                     temp_grid[row][collumn] = state_of_point;
             }
         }
-        printf("I am outsidee \n");fflush(stdout);
-        while(num_of_births>0){
-            updating_grid(&grid,&temp_grid);
-            num_of_births--;
+        if(Is_serial == 0){
+            printf("I am outsidee \n");fflush(stdout);
+            while(num_of_births>0){
+                updating_grid(&grid,&temp_grid);
+                num_of_births--;
 
+            }
+        }
+
+        else{
+           #pragma omp parallel for num_threads(number_of_threads) 
         }
 
 
