@@ -10,7 +10,7 @@ read Is_serial
 output_file="execution_times.csv"
 echo "Grid_Size,Num_Threads,Num_Births,Is_Serial,Execution_Time" > $output_file #initializing the format that each value will be printed
 
-for size_of_grid in  4096; do
+for size_of_grid in 64 1024 4096; do
     for thread_number in 1 2 4 8 16 32; do
         for iteration in 1 2 3 4; do
             if [ "$Is_serial" -eq 1 ]; then

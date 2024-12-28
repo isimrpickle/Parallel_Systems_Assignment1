@@ -18,7 +18,7 @@
 
 
 
-double main(int argc,char**argv){
+int main(int argc,char**argv){
     int num_of_births = 1000000;
     int size_of_grid=64;
     int Is_serial=1; //1 if it's parallel 0 if it's serial
@@ -80,5 +80,4 @@ double main(int argc,char**argv){
 
     free(grid);
     free(temp_grid);
-    return elapsed_time;
 }
