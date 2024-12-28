@@ -2,7 +2,8 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include "my_rand.h"
-#include "exercise1.h"
+#include "updating_grid.h"
+#include "timer.h"
 # include<omp.h>
 /* Εάν ένας οργανισμός (κατειλημμένη θέση) έχει λιγότερους από 2 γειτονικούς οργανισμούς, ο οργανισμός
 πεθαίνει από μοναξιά.
@@ -11,160 +12,73 @@
 υπερπληθυσμού.
  Εάν μία μη κατειλημμένη θέση έχει ακριβώς 3 γειτονικούς οργανισμούς, αυτή η θέση θα καταληφθεί στην
 επόμενη γενιά από έναν νέο οργανισμό, δηλαδή ένας οργανισμός γεννιέται.*/
-int size_of_grid=5;
 
 
-void parallel_updating_grid(int*** grid,int***temp_grid,int num_of_threads){
-    #pragma omp parallel for(num_of_threads) schedule(static)
-    for(int row=0;row<size_of_grid;row++){
-        for(int collumn = 0; collumn < size_of_grid;collumn++){
-            int counter_if_Is=0;
-            int curr_state = (*grid)[row][collumn];
-            for(int checking_row = row-1; checking_row<=row+1;checking_row++){
-                for(int checking_collumn = collumn-1;checking_collumn<=collumn+1;checking_collumn++){
-                    if((checking_row>=0 && checking_row<size_of_grid) && (checking_collumn>=0 && checking_collumn<size_of_grid)){
-                        if(checking_row== row &&checking_collumn==collumn){
-                            continue;
-                        }
-                        if((*grid)[checking_row][checking_collumn]==1)
-                            counter_if_Is++;
-                    }
-                }
-
-               
-
-            }
-
-            //applying the rules!
-            if(curr_state==1){ //if it's initially alive then:
-                if(counter_if_Is<2 || counter_if_Is>3)
-                    (*temp_grid)[row][collumn] = 0; //assigning it as dead (loneliness)
-                else
-                    (*temp_grid)[row][collumn] = 1; //staying the same(alive)
-            }
-            else
-                if(counter_if_Is==3)
-                    (*temp_grid)[row][collumn]=1; //the state becomes alive (neighbors ==3)
-                else
-                    (*temp_grid)[row][collumn]=0; //staying dead
-
-        }
-        
-    }
-                        printf("I am here!!!!\n");fflush(stdout);
-
-    // swap pointers
-    int **temp = *grid;
-    *grid = *temp_grid;
-    *temp_grid = temp;    
-}
 
 
-void updating_grid(int*** grid,int***temp_grid){
-    for(int row=0;row<size_of_grid;row++){
-        for(int collumn = 0; collumn < size_of_grid;collumn++){
-            int counter_if_Is=0;
-            int curr_state = (*grid)[row][collumn];
-            for(int checking_row = row-1; checking_row<=row+1;checking_row++){
-                for(int checking_collumn = collumn-1;checking_collumn<=collumn+1;checking_collumn++){
-                    if((checking_row>=0 && checking_row<size_of_grid) && (checking_collumn>=0 && checking_collumn<size_of_grid)){
-                        if(checking_row== row &&checking_collumn==collumn){
-                            continue;
-                        }
-                        if((*grid)[checking_row][checking_collumn]==1)
-                            counter_if_Is++;
-                    }
-                }
 
-               
 
-            }
+double main(int argc,char**argv){
+    int num_of_births = 1000000;
+    int size_of_grid=64;
+    int Is_serial=1; //1 if it's parallel 0 if it's serial
+    int number_of_threads=8;
 
-            //applying the rules!
-            if(curr_state==1){ //if it's initially alive then:
-                if(counter_if_Is<2 || counter_if_Is>3)
-                    (*temp_grid)[row][collumn] = 0; //assigning it as dead (loneliness)
-                else
-                    (*temp_grid)[row][collumn] = 1; //staying the same(alive)
-            }
-            else
-                if(counter_if_Is==3)
-                    (*temp_grid)[row][collumn]=1; //the state becomes alive (neighbors ==3)
-                else
-                    (*temp_grid)[row][collumn]=0; //staying dead
-
-        }
-        
+    //passing values from command line
+    if (argc>1){
+        num_of_births = strtol(argv[1],NULL,10);
+        size_of_grid=strtol(argv[2],NULL,10);
+        Is_serial = strtol(argv[3],NULL,2);
+        number_of_threads = strtol(argv[4],NULL,10);
     }
 
-    // swap pointers
-    int **temp = *grid;
-    *grid = *temp_grid;
-    *temp_grid = temp;    
+    //random  birth initialization
+    srand(time(NULL));
+    int** grid = malloc(size_of_grid*sizeof(int*));
+    int** temp_grid = malloc(size_of_grid*sizeof(int*));
+    for (int i = 0; i < size_of_grid; i++) {
+        grid[i] = malloc(size_of_grid * sizeof(int));
+        temp_grid[i] = malloc(size_of_grid * sizeof(int));
 }
+        double before,now;
+        GET_TIME(before);
+        for(int row =0;row<size_of_grid;row++){
+            for(int collumn = 0; collumn < size_of_grid;collumn++){
+                    unsigned int random_seed = rand();
+                    random_seed ^= (row + collumn); // XOR with (row+column) in order to make the seed vary
+                    int state_of_point = (my_drand(&random_seed) > 0.5) ? 1 : 0; //if my drand returns a double >0.5 then assign it as 1 else as 0
+
+                    grid[row][collumn] = state_of_point;
+                    temp_grid[row][collumn] = state_of_point;
+            }
+        }
+        if(Is_serial == 0){
+            printf("I am outsidee \n");fflush(stdout);
+            while(num_of_births>0){
+                updating_grid(&grid,&temp_grid,size_of_grid);
+                num_of_births--;
+
+            }
+        }
+
+        else{
+           while(num_of_births>0){
+                parallel_updating_grid(&grid,&temp_grid,number_of_threads,size_of_grid);
+                num_of_births--;
+           }
+        }
+        GET_TIME(now);
+        double elapsed_time=now-before;
+        printf("%f",elapsed_time);
 
 
+    //deallocating the 2d array.
+    for(int i =0;i<size_of_grid;i++){
+        free(grid[i]);
+        free(temp_grid[i]);
+    }
 
-
-
-
-// int main(int argc,char**argv){
-//     int num_of_births = 100;
-//     int size_of_grid=64;
-//     int Is_serial=0; //1 if it's parallel 0 if it's serial
-//     int number_of_threads=0;
-
-//     //passing values from command line
-//     if (argc>1){
-//         num_of_births = strtol(argv[1],NULL,10);
-//         size_of_grid=strtol(argv[2],NULL,10);
-//         Is_serial = strtol(argv[3],NULL,2);
-//         number_of_threads = strtol(argv[4],NULL,10);
-//     }
-
-//     //random  birth initialization
-//     srand(time(NULL));
-//     int** grid = malloc(size_of_grid*sizeof(int*));
-//     int** temp_grid = malloc(size_of_grid*sizeof(int*));
-//     for (int i = 0; i < size_of_grid; i++) {
-//         grid[i] = malloc(size_of_grid * sizeof(int));
-//         temp_grid[i] = malloc(size_of_grid * sizeof(int));
-// }
-    
-//         for(int row =0;row<size_of_grid;row++){
-//             for(int collumn = 0; collumn < size_of_grid;collumn++){
-//                     unsigned int random_seed = rand();
-//                     random_seed ^= (row + collumn); // XOR with (row+column) in order to make the seed vary
-//                     int state_of_point = (my_drand(&random_seed) > 0.5) ? 1 : 0; //if my drand returns a double >0.5 then assign it as 1 else as 0
-
-//                     grid[row][collumn] = state_of_point;
-//                     temp_grid[row][collumn] = state_of_point;
-//             }
-//         }
-//         if(Is_serial == 0){
-//             printf("I am outsidee \n");fflush(stdout);
-//             while(num_of_births>0){
-//                 updating_grid(&grid,&temp_grid);
-//                 num_of_births--;
-
-//             }
-//         }
-
-//         else{
-//            while(num_of_births>0){
-//                 parallel_updating_grid(&grid,&temp_grid,number_of_threads);
-//                 num_of_births--;
-//            }
-//         }
-
-
-
-//     //deallocating the 2d array.
-//     for(int i =0;i<size_of_grid;i++){
-//         free(grid[i]);
-//         free(temp_grid[i]);
-//     }
-
-//     free(grid);
-//     free(temp_grid);
-// }
+    free(grid);
+    free(temp_grid);
+    return elapsed_time;
+}

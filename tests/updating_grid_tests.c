@@ -1,7 +1,7 @@
 #include "acutest.h"
 #include <stdio.h>
 #include "my_rand.h"
-#include "exercise1.h"
+#include "updating_grid.h"
 
 
 void test(){
@@ -27,7 +27,7 @@ https://conwaylife.com/wiki/blinker*/
     grid[2][1]= grid[2][2]= grid[2][3] =1;
 
     //calling the serial function which updates the grid
-    updating_grid(&grid, &temp_grid);
+    updating_grid(&grid, &temp_grid,size_of_grid);
 
     //verifying that the horizontal line turns into a vertical line
     TEST_CHECK(grid[1][2] == 1 && grid[2][2] == 1 && grid[3][2] == 1);
@@ -45,8 +45,8 @@ https://conwaylife.com/wiki/blinker*/
     //with the same logic checking now the functionality of the parallel update.
     grid[2][1] = grid[2][2] = grid[2][3] = 1;
     int num_of_threads=4;
-    parallel_updating_grid(&grid, &temp_grid,num_of_threads);
-    
+    parallel_updating_grid(&grid, &temp_grid,num_of_threads,size_of_grid);
+
     TEST_CHECK(grid[1][2] == 1 && grid[2][2] == 1 && grid[3][2] == 1);
     TEST_CHECK(grid[2][1] == 0 && grid[2][3] == 0);
 

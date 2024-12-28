@@ -1,9 +1,9 @@
 CC = gcc
 CCFLAGS = -g -Wall
 
-EXERCISE1_TARGET = Game_of_Life_tests
+EXERCISE1_TARGET = updating_grid_tests
 
-EXERCISE1_SRCS = Game_of_Life_tests.c ./../modules/exercise1.c ./../modules/my_rand.c
+EXERCISE1_SRCS = updating_grid_tests.c ./../modules/updating_grid.c ./../modules/my_rand.c
 
 ACUTEST_DIR = ./../header_files
 ACUTEST_FLAGS = -I$(ACUTEST_DIR)
