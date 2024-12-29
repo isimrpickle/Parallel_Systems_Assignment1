@@ -33,7 +33,6 @@ int main(int argc,char**argv){
     }
 
     //random  birth initialization
-    srand(time(NULL));
     int** grid = malloc(size_of_grid*sizeof(int*));
     int** temp_grid = malloc(size_of_grid*sizeof(int*));
     for (int i = 0; i < size_of_grid; i++) {
@@ -41,7 +40,6 @@ int main(int argc,char**argv){
         temp_grid[i] = malloc(size_of_grid * sizeof(int));
 }
         double before,now;
-        GET_TIME(before);
         for(int row =0;row<size_of_grid;row++){
             for(int collumn = 0; collumn < size_of_grid;collumn++){
                     unsigned int random_seed = rand();
@@ -52,6 +50,7 @@ int main(int argc,char**argv){
                     temp_grid[row][collumn] = state_of_point;
             }
         }
+        GET_TIME(before);
         if(Is_serial == 0){
             printf("I am outsidee \n");fflush(stdout);
             while(num_of_births>0){
