@@ -1,6 +1,5 @@
 # Parallel_Systems_Assignment1
-The second assignment in the subjet of di's parallel systems. The second assignment focus on openmp usage in various use cases.
-
+The second assignment in the subjet of parallel systems. The second assignment is focused in OpenMP usage.
 
 modules contains the source code for exercises 1 and 2 as also the implementation of functions that was used in exercise 1.
 

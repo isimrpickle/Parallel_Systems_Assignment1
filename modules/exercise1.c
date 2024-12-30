@@ -24,7 +24,7 @@ int main(int argc,char**argv){
     //passing values from command line: number of births, the size of grid, 0 for serial/1 for parallel, number of threads
     int num_of_births = strtol(argv[1],NULL,10);
     int size_of_grid=strtol(argv[2],NULL,10);
-    int Is_serial = strtol(argv[3],NULL,2);
+    int Is_parallel = strtol(argv[3],NULL,2);
     int number_of_threads = strtol(argv[4],NULL,10);
 
 
@@ -47,7 +47,7 @@ int main(int argc,char**argv){
             }
         }
         GET_TIME(before);
-        if(Is_serial == 0){
+        if(Is_parallel == 0){
             while(num_of_births>0){
                 updating_grid(&grid,&temp_grid,size_of_grid);
                 num_of_births--;
