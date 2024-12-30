@@ -1,13 +1,7 @@
 #!/bin/bash
-echo -e "Enter the size of triangular matrix:"
-read matrix_size
 
-echo -e "Enter 1 for parallel execution or 0 for serial execution:"
-read Is_serial
-
-echo -e "Enter 1 to execute by byCollumn or byRow:"
-read Is_row_or_collumn
-
+#running for 4 times for each different matrix size(100/1000/10000) the serial algorithm by row and then for 4 times byCollumn
+# the execution time for each instance is saved in a csv file
 #creating csv files for the diagrams later
     output_file="serial_execution_times.csv"
     echo "matrix_size,Is_serial,Is_row_or_collumn,Execution_time" > $output_file

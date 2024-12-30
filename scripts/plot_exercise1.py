@@ -2,6 +2,9 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib
 
+
+#prints a diagram as a png file for a specific grid size
+
 # Use the Agg backend for non-GUI environments
 matplotlib.use('Agg')
 
@@ -9,7 +12,7 @@ matplotlib.use('Agg')
 df = pd.read_csv("execution_times.csv")
 
 # Filter data for a specific grid size
-subset = df[df["Grid_Size"] == 4096]
+subset = df[df["Grid_Size"] == 4096] 
 
 # Group by Num_Threads and calculate the mean Execution_Time
 summary = subset.groupby("Num_Threads")["Execution_Time"].mean()

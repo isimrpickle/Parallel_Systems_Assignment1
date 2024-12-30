@@ -2,6 +2,10 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib
 
+#prints 2 diagrams 1 for the parallel algorithm and another for the serial one. If it's the row/collumn algorithm depends on the 
+#subset
+
+
 # Using 'Agg' because we will save the diagram in a PNG file
 matplotlib.use('Agg')
 

@@ -48,7 +48,6 @@ int main(int argc,char**argv){
         }
         GET_TIME(before);
         if(Is_serial == 0){
-            printf("I am outsidee \n");fflush(stdout);
             while(num_of_births>0){
                 updating_grid(&grid,&temp_grid,size_of_grid);
                 num_of_births--;
