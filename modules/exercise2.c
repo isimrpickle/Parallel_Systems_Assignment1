@@ -3,6 +3,7 @@
 #include <time.h>
 #include "timer.h"
 
+//initialing nxn upper triangular with random values from 0-9
 void initialize_upper_triangular_matrix(int n, int** A, int* b) {
     srand(time(0));
     for (int i = 0; i < n; i++) {
@@ -17,7 +18,7 @@ void initialize_upper_triangular_matrix(int n, int** A, int* b) {
     }
 }
 
-
+//self-explanatory
 void printing_matrix(int**A,int n,int*b){
     for(int i=0;i<n;i++){
         for(int j=0;j<n;j++){
@@ -27,11 +28,13 @@ void printing_matrix(int**A,int n,int*b){
         printf("\n");fflush(stdout);
     }
 }
+//same
 void printing_results(double*x,int n ){
     for(int i =0;i<n;i++){
         printf("x%d is %f\n",i,x[i]);fflush(stdout);
     }
 }
+
 
 void serial_byRow(double* x,int n, int*b, int**A){
 
@@ -107,7 +110,11 @@ int main(int argc,char**argv){
     int* b = malloc(n*sizeof(int));
     double* x = malloc(n*sizeof(double));
     initialize_upper_triangular_matrix(n,A,b);
+
+
     double before,now;
+    //if it's parallel we execute the parallel row/collumn function else the serial functions
+
     if(Is_serial==0){
         if(Is_row_or_collumn==0){
             GET_TIME(before)
@@ -134,7 +141,7 @@ int main(int argc,char**argv){
         }
     }
     double elapsed_time = now-before;
-    printf("%f\n",elapsed_time);fflush(stdout);
+    printf("%f\n",elapsed_time);fflush(stdout); //calculatinh and printing the elapsed time
 
     for(int i=0;i<n;i++)
         free(A[i]);

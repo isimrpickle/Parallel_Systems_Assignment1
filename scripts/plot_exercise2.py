@@ -10,7 +10,7 @@ df = pd.read_csv("parallel_execution_times.csv")
 
 
 
-subset = df[df["Is_row_or_collumn"] == 0] #0 for row algorithm,1 for collumn
+subset = df[df["Is_row_or_collumn"] == 1] #0 for row algorithm,1 for collumn
 
 summary = subset.groupby(["matrix_size","thread_num"])["Execution_time"].mean().reset_index()
 
@@ -25,10 +25,10 @@ for matrix_size in summary["matrix_size"].unique():
 # Adding labels, title, and legend
 plt.xlabel("Number of Threads")
 plt.ylabel("Mean Execution Time (seconds)")
-plt.title("Execution Time for parallel Row Algorithm")
+plt.title("Execution Time for parallel Collumn Algorithm")
 plt.grid()
 plt.legend()
-plt.savefig("parallelbyRow_plot.png")
+plt.savefig("parallelbyCollumn_plot.png")
 
 
 

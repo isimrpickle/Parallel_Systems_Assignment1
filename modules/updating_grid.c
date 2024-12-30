@@ -2,6 +2,8 @@
 # include<omp.h>
 #include <stdio.h>
 void parallel_updating_grid(int*** grid,int***temp_grid,int num_of_threads,int size_of_grid){
+    //calculating how many alive neighbors each collumn have
+
     #pragma omp parallel for num_threads(num_of_threads) schedule(static)
     for(int row=0;row<size_of_grid;row++){
         for(int collumn = 0; collumn < size_of_grid;collumn++){
