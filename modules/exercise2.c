@@ -38,38 +38,33 @@ void serial_byRow(double* x,int n, int*b, int**A){
     for (int row = n-1; row >= 0; row--) {
         x[row] = b[row];
         for (int col = row+1; col < n; col++)
-        x[row] -= A[row][col]*x[col];
+            x[row] -= A[row][col]*x[col];
         x[row] /= A[row][row];
 }
 }
 
-//based on this paper: https://www.researchgate.net/publication/359143805_Parallel_implementation_of_solving_linear_equations_using_OpenMP#pf7 ,chapter 3.1
+//loosesly based on this paper: https://www.researchgate.net/publication/359143805_Parallel_implementation_of_solving_linear_equations_using_OpenMP#pf7 ,chapter 3.1
 
 void parallel_byRow(double* x, int n, int*b, int**A,int thread_count){
-    #pragma omp parallel for num_therads(thread_count) schedule(static)
-        
-        for(int i= n-1; i>=0; i--){
-            #pragma omp single
-                double temp = b[i]; //each thread will have its own temp variable
+    for(int i= n-1; i>=0; i--){
+        double temp = b[i]; //each thread will have its own temp variable
 
-            #pragma omp parallel for num_threads(thread_count)\
-                reduction(+:temp)
-                for(int j=i+1;j<=n-1;j++){
-                    temp = temp-(A[i][j]*x[j]);
+        #pragma omp parallel for num_threads(thread_count)\
+            reduction(+:temp)
+            for(int j=i+1;j<=n-1;j++){
+                temp = temp-(A[i][j]*x[j]);
                 }
-            #pragma omp single
-                x[i] = temp / A[i][i]; //easy way to avoid race condition(only a signle thread will write to x[i])
-        }
+
+        x[i] = temp / A[i][i]; //easy way to avoid race condition(only a signle thread will write to x[i])
+    }
 }
 
 void parallel_byCollumn(double *x, int n , int*b, int** A,int thread_count){
     #pragma omp parallel for num_threads(thread_count) schedule(static)
         for(int row=0; row<n;row++)
             x[row]=b[row];
-    #pragma omp parallel for num_therads(thread_count) schedule(static)
         
         for(int j = n-1; j>=0; j--){
-            #pragma omp single
             x[j] /= A[j][j];
             #pragma omp parallel for num_threads(thread_count)\
                 reduction(+:x)

@@ -19,18 +19,15 @@
 
 
 int main(int argc,char**argv){
-    int num_of_births = 1000000;
-    int size_of_grid=64;
-    int Is_serial=1; //1 if it's parallel 0 if it's serial
-    int number_of_threads=8;
+   
 
     //passing values from command line
-    if (argc>1){
-        num_of_births = strtol(argv[1],NULL,10);
-        size_of_grid=strtol(argv[2],NULL,10);
-        Is_serial = strtol(argv[3],NULL,2);
-        number_of_threads = strtol(argv[4],NULL,10);
-    }
+   
+    int num_of_births = strtol(argv[1],NULL,10);
+    int size_of_grid=strtol(argv[2],NULL,10);
+    int Is_serial = strtol(argv[3],NULL,2);
+    int number_of_threads = strtol(argv[4],NULL,10);
+
 
     //random  birth initialization
     int** grid = malloc(size_of_grid*sizeof(int*));
