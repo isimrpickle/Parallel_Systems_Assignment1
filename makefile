@@ -1,26 +1,33 @@
 CC = gcc
 CFLAGS = -g -Wall -fopenmp
 
-# Define target
+#define the targets
 EXERCISE1_TARGET = exercise1
+EXERCISE2_TARGET = exercise2
 
-# Source files
+#source files
 EXERCISE1_SRCS = modules/exercise1.c modules/updating_grid.c modules/my_rand.c
+EXERCISE2_SRCS = modules/exercise2.c 
 
-# Include directory for header files
+#linking the header files
 EXERCISE1_DIR = header_files
 
-# Build all
-all: $(EXERCISE1_TARGET)
 
-# Build target
+
+all: $(EXERCISE1_TARGET) $(EXERCISE2_TARGET)
+
+
 $(EXERCISE1_TARGET): $(EXERCISE1_SRCS)
 	$(CC) $(CFLAGS) -I$(EXERCISE1_DIR) -o $(EXERCISE1_TARGET) $(EXERCISE1_SRCS)
 
-# Clean build files
+$(EXERCISE2_TARGET): $(EXERCISE2_SRCS)
+	$(CC) $(CFLAGS) -I$(EXERCISE1_DIR) -o $(EXERCISE2_TARGET) $(EXERCISE2_SRCS)
+
+
+
+#clean build files
 clean:
 	rm -f $(EXERCISE1_TARGET)
 
-# Run the program
 run: $(EXERCISE1_TARGET)
 	./$(EXERCISE1_TARGET)

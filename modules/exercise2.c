@@ -49,27 +49,32 @@ void parallel_byRow(double* x, int n, int*b, int**A,int thread_count){
     for(int i= n-1; i>=0; i--){
         double temp = b[i]; //each thread will have its own temp variable
 
+        //parallelizing the calculation of x[row] because it's based on calculations that have already been done
         #pragma omp parallel for num_threads(thread_count)\
             reduction(+:temp)
             for(int j=i+1;j<=n-1;j++){
                 temp = temp-(A[i][j]*x[j]);
                 }
 
-        x[i] = temp / A[i][i]; //easy way to avoid race condition(only a signle thread will write to x[i])
+        x[i] = temp / A[i][i]; 
     }
 }
 
 void parallel_byCollumn(double *x, int n , int*b, int** A,int thread_count){
+    //parallelizing the initialization of x array
     #pragma omp parallel for num_threads(thread_count) schedule(static)
         for(int row=0; row<n;row++)
             x[row]=b[row];
         
-        for(int j = n-1; j>=0; j--){
+        for(int j = n-1; j>=0; j--){ //this cannot be parallelized because x[j-1] needs x[j] to be calculated
             x[j] /= A[j][j];
-            #pragma omp parallel for num_threads(thread_count)\
-                reduction(+:x)
-                for( int i=0;i<j;i++)    
-                    x[i] -= (A[i][j]*x[j]);
+
+            //parallelizing the inner calculation(this calculation is indepedent, it only accesses elements that have already been calculated)
+            #pragma omp parallel for num_threads(thread_count)
+                for( int i=0;i<j;i++){
+                    #pragma omp atomic //it will be executed only by 1 thread at a time, thus avoidin race condtions.
+                        x[i] -= (A[i][j]*x[j]);
+                }
         }
 
 
@@ -144,31 +149,3 @@ int main(int argc,char**argv){
 
 
 
-// void initializing_upper_triangulat_matrix(int** A,int**B,int n){
-//     for(int i=0;i<n;i++){
-//         for(int j=0;j<n;j++){
-//             if(i-1>=0){
-//                 for(int z=0;z<=i-1;z++){
-//                     A[i][z]=0; //ensuring that each row will have one more zero than before
-//                 }
-//                 for(int k=i;k<n;k++)
-//                     A[i][k]=
-//             }
-//         }
-//     }
-// }
-
-
-
-
-
-
-
-// int main(){
-//     for (row = n−1; row >= 0; row−−) {
-// x[row] = b[row];
-// for (col = row+1; col < n; col++)
-// x[row] −= A[row][col]*x[col];
-// x[row] /= A[row][row];
-// }
-// }
