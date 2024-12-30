@@ -2,8 +2,8 @@ CC = gcc
 CFLAGS = -g -Wall -fopenmp
 
 #define the targets
-EXERCISE1_TARGET = exercise1
-EXERCISE2_TARGET = exercise2
+EXERCISE1_TARGET = modules/exercise1
+EXERCISE2_TARGET = modules/exercise2
 
 #source files
 EXERCISE1_SRCS = modules/exercise1.c modules/updating_grid.c modules/my_rand.c
