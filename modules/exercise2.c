@@ -95,18 +95,10 @@ void serial_byCollumn(double* x,int n, int*b, int**A){
 
 
 int main(int argc,char**argv){
- 
-    int n =1000;
-    int Is_serial=0;
-    int Is_row_or_collumn = 0;
-    int num_of_threads = 8;
-
-    if(argc>1){
         int n=strtol(argv[1],NULL,10);
         int Is_serial = strtol(argv[2],NULL,2);
         int Is_row_or_collumn = strtol(argv[3],NULL,2); //if 0 is rows,else if 1 is collumns
         int num_of_threads = strtol(argv[4],NULL,10);
-    }
    
     int** A = malloc(n* sizeof(int*));
     for(int i=0;i<n;i++)   
@@ -116,7 +108,6 @@ int main(int argc,char**argv){
     double* x = malloc(n*sizeof(double));
     initialize_upper_triangular_matrix(n,A,b);
     double before,now;
-
     if(Is_serial==0){
         if(Is_row_or_collumn==0){
             GET_TIME(before)

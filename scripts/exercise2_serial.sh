@@ -11,6 +11,7 @@ read Is_row_or_collumn
 #creating csv files for the diagrams later
     output_file="serial_execution_times.csv"
     echo "matrix_size,Is_serial,Is_row_or_collumn,Execution_time" > $output_file
+    thread_num=0
 
 for Is_serial in 1; do
     for Is_row_or_collumn in 0 1; do
