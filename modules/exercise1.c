@@ -21,7 +21,7 @@
 int main(int argc,char**argv){
    
 
-    //passing values from command line
+    //passing values from command line: number of births, the size of grid, 0 for serial/1 for parallel, number of threads
     int num_of_births = strtol(argv[1],NULL,10);
     int size_of_grid=strtol(argv[2],NULL,10);
     int Is_serial = strtol(argv[3],NULL,2);

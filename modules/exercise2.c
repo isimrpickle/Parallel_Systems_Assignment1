@@ -96,6 +96,7 @@ void serial_byCollumn(double* x,int n, int*b, int**A){
 
 
 
+//./exercise2 sizeOfMatrix( 0=parallel / 1=serial ) (0=row algorithm / 1=Collumn algorithm) NumberOfThreads
 
 int main(int argc,char**argv){
         int n=strtol(argv[1],NULL,10);
